@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+
+import com.mysema.query.types.expr.BooleanExpression;
 import com.org.util.repository.BaseRepository;
 import com.org.util.service.BaseService;
 import com.udb.model.Estado;
@@ -29,20 +31,21 @@ public class TransicionService extends BaseService<Transicion, Long> {
 		return transicionRepository;
 	}
 
-	/**
-	 * Find transicion.
-	 *
-	 * @param etapaInicial
-	 *            the etapa inicial
-	 * @param etapaFinal
-	 *            the etapa final
-	 * @param workflowDocumento
-	 *            the workflow documento
-	 * @return the transicion
-	 */
-	public Transicion findTransicion(Estado etapaInicial, Estado etapaFinal) {
+	public Transicion findTransicion(Estado etapaInicial, Estado etapaFinal, String nombre) {
 		return transicionRepository
-				.findOne(qTransicion.etapaInicial.eq(etapaInicial).and(qTransicion.etapaFinal.eq(etapaFinal)));
+				.findOne(qTransicion.etapaInicial.eq(etapaInicial)
+						.and(qTransicion.etapaFinal.eq(etapaFinal))
+						.and(qTransicion.nombre.eq(nombre)));
+	}
+
+	public List<Transicion> findbyEtapaInicial(Estado estadoInicial) {
+		BooleanExpression byEstadoIni = QTransicion.transicion.etapaInicial.eq(estadoInicial);
+		return (List<Transicion>) transicionRepository.findAll(byEstadoIni);
+	}
+
+	public List<Transicion> findbyEtapaFinal(Estado estadoFinal) {
+		BooleanExpression byEstadoFin = QTransicion.transicion.etapaFinal.eq(estadoFinal);
+		return (List<Transicion>) transicionRepository.findAll(byEstadoFin);
 	}
 
 	public void saveDiagram(List<Estado> etapaList, List<Transicion> transicionList) {

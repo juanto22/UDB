@@ -31,6 +31,7 @@ import org.primefaces.model.diagram.endpoint.EndPointAnchor;
 import org.primefaces.model.diagram.endpoint.RectangleEndPoint;
 import org.primefaces.model.diagram.overlay.ArrowOverlay;
 import org.primefaces.model.diagram.overlay.LabelOverlay;
+import org.primefaces.model.diagram.overlay.Overlay;
 
 import com.org.security.enums.TipoConectorEnum;
 import com.org.security.enums.TipoEtapa;
@@ -72,21 +73,27 @@ public class AutomataView implements Serializable {
 	private DefaultDiagramModel model;
 	private Transicion transicion;
 	private Estado estado;
+	private TipoEtapa tipoEtapa;
+	private ConnectEvent connectEvent;
 	private List<TipoEtapa> tiposEtapaList;
+	private String transicionName;
+	private Long idEstado;
 
 	@PostConstruct
 	public void init() {
 		model = new DefaultDiagramModel();
 		model.setMaxConnections(-1);
 		model.getDefaultConnectionOverlays().add(new ArrowOverlay(7, 20, 1, 1));
-		
+		model.setDefaultConnector(createConnector());
+
+		cargarEstados();
+	}
+
+	public StateMachineConnector createConnector() {
 		StateMachineConnector connector = new StateMachineConnector();
 		connector.setPaintStyle("{strokeStyle:'#7D7463', lineWidth:2}");
-        connector.setOrientation(StateMachineConnector.Orientation.ANTICLOCKWISE);
-        
-        model.setDefaultConnector(connector);
-        
-		cargarEstados();
+		connector.setOrientation(StateMachineConnector.Orientation.ANTICLOCKWISE);
+		return connector;
 	}
 
 	public void prepareCreate() {
@@ -95,53 +102,63 @@ public class AutomataView implements Serializable {
 		tiposEtapaList = Arrays.asList(TipoEtapa.values());
 	}
 
+	public void checkInitialStage() {
+		for (Element element : getModel().getElements()) {
+			if (element instanceof DiagramElement) {
+				DiagramElement auxElement = (DiagramElement) element;
+				Estado estado = (Estado) auxElement.getEntity();
+				if (TipoEtapa.INICIAL.equals(estado.getTipoEtapa())) {
+					tipoEtapa = TipoEtapa.INICIAL;
+					break;
+				}
+			}
+		}
+	}
+
 	public void cargarEstados() {
 		model.clear();
-		transicion = new Transicion();
-		estado = new Estado();
-
-		DiagramElement<Estado, Long> element = null;
-		DiagramElement<Estado, Long> source = null;
-		DiagramElement<Estado, Long> target = null;
-		EndPoint endPoint = null;
-
 		try {
-			for (Estado estado : estadoService.findAll()) {
-				element = new DiagramElement<>(estado, estado.getNombre(), estado.getDibuja().getX(),
-						estado.getDibuja().getY());
-
-				element.setId("etapa-" + estado.getId().toString());
-				element.setStyleClass(estado.getDibuja().getCssClass());
-				element.setDraggable(true);
-
-				endPoint = createRectangleEndPoint(EndPointAnchor.TOP, 7, 7, true);
-				element.addEndPoint(endPoint);
-
-				endPoint = createRectangleEndPoint(EndPointAnchor.RIGHT, 7, 7, true);
-				element.addEndPoint(endPoint);
-
-				endPoint = createDotEndPoint(EndPointAnchor.BOTTOM, 4, true);
-				element.addEndPoint(endPoint);
-
-				endPoint = createDotEndPoint(EndPointAnchor.LEFT, 4, true);
-				element.addEndPoint(endPoint);
-
-				model.addElement(element);
-			}
-
-			for (Transicion transicion : transicionService.findAll()) {
-
-				source = (DiagramElement) model.findElement("etapa-" + transicion.getEtapaInicial().getId().toString());
-				target = (DiagramElement) model.findElement("etapa-" + transicion.getEtapaFinal().getId().toString());
-
-				model.connect(createConnection(source.getEndPoints().get(transicion.getConectorFuente().getCode()),
-						target.getEndPoints().get(transicion.getConectorDestino().getCode()), source.getEntity(),
-						target.getEntity()));
-			}
+			fillModelWithElements();
+			createModelTransitions();
 		} catch (Exception e) {
 			Messages.create("ERROR!").detail(e.getMessage()).error().add();
 		}
 
+	}
+
+	public void fillModelWithElements() {
+		for (Estado estado : estadoService.findAll()) {
+			model.addElement(createElement(estado));
+		}
+	}
+
+	public DiagramElement<Estado, Long> createElement(Estado estado) {
+		DiagramElement<Estado, Long> element = new DiagramElement<>(estado, estado.getNombre(),
+				estado.getDibuja().getX(), estado.getDibuja().getY());
+		element.setId("etapa-" + estado.getId().toString());
+		element.setStyleClass(estado.getDibuja().getCssClass());
+		element.setDraggable(true);
+		element.addEndPoint(createRectangleEndPoint(EndPointAnchor.TOP, 7, 7, true));
+		element.addEndPoint(createRectangleEndPoint(EndPointAnchor.RIGHT, 7, 7, true));
+		element.addEndPoint(createDotEndPoint(EndPointAnchor.BOTTOM, 4, true));
+		element.addEndPoint(createDotEndPoint(EndPointAnchor.LEFT, 4, true));
+
+		return element;
+	}
+
+	public void createModelTransitions() {
+		DiagramElement<Estado, Long> source = null;
+		DiagramElement<Estado, Long> target = null;
+
+		for (Transicion transicion : transicionService.findAll()) {
+
+			source = (DiagramElement) model.findElement("etapa-" + transicion.getEtapaInicial().getId().toString());
+			target = (DiagramElement) model.findElement("etapa-" + transicion.getEtapaFinal().getId().toString());
+
+			model.connect(createConnection(source.getEndPoints().get(transicion.getConectorFuente().getCode()),
+					target.getEndPoints().get(transicion.getConectorDestino().getCode()), source.getEntity(),
+					target.getEntity(), transicion.getNombre()));
+		}
 	}
 
 	private EndPoint createDotEndPoint(EndPointAnchor anchor, int radius, boolean target) {
@@ -164,12 +181,12 @@ public class AutomataView implements Serializable {
 		return endPoint;
 	}
 
-	private Connection createConnection(EndPoint from, EndPoint to, Estado source, Estado target) {
+	private Connection createConnection(EndPoint from, EndPoint to, Estado source, Estado target, String label) {
 		DiagramConnection<Estado, Long> conn = new DiagramConnection<>(from, to);
 		conn.setSourceEntity(source);
 		conn.setTargetEntity(target);
-		
-		conn.getOverlays().add(new LabelOverlay("test", "test 2", 0.5));
+
+		conn.getOverlays().add(new LabelOverlay(label, "", 0.5));
 		return conn;
 	}
 
@@ -181,11 +198,13 @@ public class AutomataView implements Serializable {
 		Messages.create("Cambio").detail("Conexion cambio").add();
 	}
 
-	public void onConnect(ConnectEvent event) {
+	public void doOnConnect(ConnectEvent event) {
+		connectEvent = event;
+	}
+
+	public void onConnect() {
 		List<Connection> connectionToDeleteList = new ArrayList<>();
 		List<DiagramConnection> connectionList = new ArrayList<>();
-		DiagramElement<Estado, Long> sourceElement = null;
-		DiagramElement<Estado, Long> targetElement = null;
 
 		for (Connection connection : getModel().getConnections()) {
 			if (!(connection instanceof DiagramConnection)) {
@@ -195,39 +214,61 @@ public class AutomataView implements Serializable {
 			}
 		}
 
-		for (Connection connectionToDelete : connectionToDeleteList) {
-			getModel().disconnect(connectionToDelete);
+		doConnect(connectionToDeleteList, connectionList);
 
-			if (event.getSourceElement() instanceof DiagramElement) {
-				sourceElement = (DiagramElement) event.getSourceElement();
-			}
+	}
 
-			if (event.getTargetElement() instanceof DiagramElement) {
-				targetElement = (DiagramElement) event.getTargetElement();
-			}
+	public void doConnect(List<Connection> connectionToDeleteList, List<DiagramConnection> connectionList) {
 
-			boolean flag = false;
-			// validando existencia de conexcion
-			if (sourceElement != null && targetElement != null) {
-				for (DiagramConnection<Estado, Long> currentConnection : connectionList) {
-					if (currentConnection.getSourceEntity().getNombre().equals(sourceElement.getEntity().getNombre())
-							&& currentConnection.getTargetEntity().getNombre()
-									.equals(targetElement.getEntity().getNombre())) {
-						flag = true;
-						break;
-					}
-				}
-			}
+		DiagramElement<Estado, Long> sourceElement = getSourceElement();
+		DiagramElement<Estado, Long> targetElement = getTargetElement();
 
-			if (!flag) {
-				if (sourceElement != null && targetElement != null) {
+		if (sourceElement != null && targetElement != null) {
+			for (Connection connectionToDelete : connectionToDeleteList) {
+				getModel().disconnect(connectionToDelete);
+				if (!checkConnectionExist(sourceElement, targetElement, connectionList)) {
 					model.connect(createConnection(connectionToDelete.getSource(), connectionToDelete.getTarget(),
-							sourceElement.getEntity(), targetElement.getEntity()));
+							sourceElement.getEntity(), targetElement.getEntity(), transicionName));
+
+				} else {
+					Messages.create("Agregado").detail("Transición ya existe no se puede agregar una nueva").error()
+							.add();
 				}
-			} else {
-				Messages.create("Agregado").detail("Transición ya existe no se puede agregar una nueva").error().add();
 			}
 		}
+	}
+
+	public DiagramElement<Estado, Long> getSourceElement() {
+		if (connectEvent != null && connectEvent.getSourceElement() instanceof DiagramElement) {
+			return (DiagramElement<Estado, Long>) connectEvent.getSourceElement();
+		}
+
+		return null;
+	}
+
+	public DiagramElement<Estado, Long> getTargetElement() {
+		if (connectEvent.getTargetElement() instanceof DiagramElement) {
+			return (DiagramElement<Estado, Long>) connectEvent.getTargetElement();
+		}
+
+		return null;
+	}
+
+	public boolean checkConnectionExist(DiagramElement<Estado, Long> sourceElement,
+			DiagramElement<Estado, Long> targetElement, List<DiagramConnection> connectionList) {
+		boolean flag = false;
+
+		for (DiagramConnection<Estado, Long> currentConnection : connectionList) {
+			LabelOverlay label = (LabelOverlay) currentConnection.getOverlays().get(0);
+			if (currentConnection.getSourceEntity().getNombre().equals(sourceElement.getEntity().getNombre())
+					&& currentConnection.getTargetEntity().getNombre().equals(targetElement.getEntity().getNombre())
+					&& label.getLabel() != null && label.getLabel().equals(transicionName)) {
+				flag = true;
+				break;
+			}
+		}
+
+		return flag;
 	}
 
 	public void elementDrop(ElementDropEvent elementDropEvent) {
@@ -241,7 +282,7 @@ public class AutomataView implements Serializable {
 		estado.getDibuja().setX("1em");
 		estado.getDibuja().setY("3em");
 		estado.getDibuja().setCssClass("border-radius normal inicial");
-		
+
 		estadoService.save(estado);
 		saveDiagram();
 		cargarEstados();
@@ -280,9 +321,9 @@ public class AutomataView implements Serializable {
 		for (Connection connection : getModel().getConnections()) {
 			auxConnection = (DiagramConnection) connection;
 			if (!(auxConnection.getSourceEntity().getId() == null || auxConnection.getTargetEntity().getId() == null)) {
-
+				LabelOverlay label = (LabelOverlay) connection.getOverlays().get(0);
 				transicion = transicionService.findTransicion(auxConnection.getSourceEntity(),
-						auxConnection.getTargetEntity());
+						auxConnection.getTargetEntity(), label.getLabel());
 			}
 
 			if (transicion == null) {
@@ -291,7 +332,6 @@ public class AutomataView implements Serializable {
 
 			transicion.setEtapaInicial(auxConnection.getSourceEntity());
 			transicion.setEtapaFinal(auxConnection.getTargetEntity());
-			transicion.setRequiereFirma(false);
 
 			switch (auxConnection.getSource().getAnchor()) {
 			case TOP:
@@ -334,12 +374,35 @@ public class AutomataView implements Serializable {
 			default:
 				break;
 			}
-
+			LabelOverlay label = (LabelOverlay) auxConnection.getOverlays().get(0);
+			transicion.setNombre(label.getLabel());
 			transicionList.add(transicion);
 
 		}
 
 		transicionService.saveDiagram(estadoList, transicionList);
+
+	}
+
+	public void delete() {
+		Estado estadoDelete = estadoService.findOne(idEstado);
+
+		List<Transicion> transicionforSource = transicionService.findbyEtapaInicial(estadoDelete);
+		List<Transicion> transicionforTarget = transicionService.findbyEtapaFinal(estadoDelete);
+
+		try {
+			transicionService.delete(transicionforSource);
+			transicionService.delete(transicionforTarget);
+
+			getModel().getElements().remove(estadoDelete);
+			estadoService.delete(estadoDelete);
+			getModel().getElements().remove(estadoDelete);
+			cargarEstados();
+
+			Messages.create("INFO").detail("Se elimino la etapa satisfactoriamente").add();
+		} catch (Exception e) {
+			Messages.create("INFO").detail("No se pudo eliminar la etapa").error().add();
+		}
 
 	}
 }

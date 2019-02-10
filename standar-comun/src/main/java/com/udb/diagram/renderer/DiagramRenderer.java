@@ -90,7 +90,6 @@ public class DiagramRenderer extends org.primefaces.component.diagram.DiagramRen
 
 		if (model != null) {
 			List<Element> elements = model.getElements();
-			List<Connection> connections = model.getConnections();
 
 			if (elements != null && !elements.isEmpty()) {
 				for (int i = 0; i < elements.size(); i++) {
@@ -131,14 +130,6 @@ public class DiagramRenderer extends org.primefaces.component.diagram.DiagramRen
 
 					// Para contextMenu
 					if (!diagram.getChildren().isEmpty()) {
-						for (Connection con : connections) {
-							DiagramConnection<?, ?> safiConnection = (DiagramConnection<?, ?>) con;
-							if (id[1].equals(safiConnection.getTargetEntity().getId().toString())) {
-								jerarquia = true;
-								break;
-							}
-						}
-
 						List<UIComponent> menuItems = diagram.getChildren();
 
 						AbstractMenu menuAux = makeMenu("ctx" + element.getElemento() + "-" + element.getId(),

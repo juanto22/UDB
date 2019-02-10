@@ -42,16 +42,7 @@ public class Transicion implements BaseModelEntity<Long> {
 	Long id;
 
 	@Column(nullable = true)
-	Boolean requiereFirma;
-
-	@Column(nullable = true)
 	String nombre;
-
-	@Column(nullable = true)
-	Boolean permiteMultiples;
-
-	@Column(nullable = true)
-	Boolean invocaMetodoCon;
 
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "ETAPAINICIAL_ID", referencedColumnName = "ID") })
@@ -60,9 +51,6 @@ public class Transicion implements BaseModelEntity<Long> {
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "ETAPAFINAL_ID", referencedColumnName = "ID") })
 	Estado etapaFinal;
-
-	@Column(length = 255, nullable = true)
-	String metodoEjecucion;
 
 	@Column(length = 255, nullable = true)
 	private Integer conectorFuente; // Enum
