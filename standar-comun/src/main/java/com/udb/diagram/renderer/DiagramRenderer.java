@@ -112,13 +112,13 @@ public class DiagramRenderer extends org.primefaces.component.diagram.DiagramRen
 							? "element-aceptacion" 
 									: "";
 
-//					writer.startElement("div", null);// para aceptacion
-//					writer.writeAttribute("class", aceptacionStyle, null);// para aceptacion
 					writer.startElement("div", null);
 					writer.writeAttribute("id", clientId + "-" + element.getId(), null);
 					writer.writeAttribute("class", elementClass, null);
 					writer.writeAttribute("style", coords, null);
 					writer.writeAttribute("ondblclick", diagram.getOndblclickNameFunction() + "(" + id[1] + ")", null);
+					writer.startElement("div", null);// para aceptacion
+					writer.writeAttribute("class", aceptacionStyle, null);// para aceptacion
 
 					if (elementFacet != null && var != null) {
 						requestMap.put(var, data);
@@ -126,8 +126,8 @@ public class DiagramRenderer extends org.primefaces.component.diagram.DiagramRen
 					} else if (data != null) {
 						writer.writeText(data, null);
 					}
+					writer.endElement("div");// para aceptacion
 					writer.endElement("div");
-//					writer.endElement("div");// para aceptacion
 
 					// Para contextMenu
 					if (!diagram.getChildren().isEmpty()) {

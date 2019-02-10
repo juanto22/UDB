@@ -24,11 +24,13 @@ import org.primefaces.event.diagram.DisconnectEvent;
 import org.primefaces.model.diagram.Connection;
 import org.primefaces.model.diagram.DefaultDiagramModel;
 import org.primefaces.model.diagram.Element;
+import org.primefaces.model.diagram.connector.StateMachineConnector;
 import org.primefaces.model.diagram.endpoint.DotEndPoint;
 import org.primefaces.model.diagram.endpoint.EndPoint;
 import org.primefaces.model.diagram.endpoint.EndPointAnchor;
 import org.primefaces.model.diagram.endpoint.RectangleEndPoint;
 import org.primefaces.model.diagram.overlay.ArrowOverlay;
+import org.primefaces.model.diagram.overlay.LabelOverlay;
 
 import com.org.security.enums.TipoConectorEnum;
 import com.org.security.enums.TipoEtapa;
@@ -76,7 +78,14 @@ public class AutomataView implements Serializable {
 	public void init() {
 		model = new DefaultDiagramModel();
 		model.setMaxConnections(-1);
-		model.getDefaultConnectionOverlays().add(new ArrowOverlay(20, 20, 1, 1));
+		model.getDefaultConnectionOverlays().add(new ArrowOverlay(7, 20, 1, 1));
+		
+		StateMachineConnector connector = new StateMachineConnector();
+		connector.setPaintStyle("{strokeStyle:'#7D7463', lineWidth:2}");
+        connector.setOrientation(StateMachineConnector.Orientation.ANTICLOCKWISE);
+        
+        model.setDefaultConnector(connector);
+        
 		cargarEstados();
 	}
 
@@ -105,16 +114,16 @@ public class AutomataView implements Serializable {
 				element.setStyleClass(estado.getDibuja().getCssClass());
 				element.setDraggable(true);
 
-				endPoint = createRectangleEndPoint(EndPointAnchor.TOP, 10, 10, true);
+				endPoint = createRectangleEndPoint(EndPointAnchor.TOP, 7, 7, true);
 				element.addEndPoint(endPoint);
 
-				endPoint = createRectangleEndPoint(EndPointAnchor.RIGHT, 10, 10, true);
+				endPoint = createRectangleEndPoint(EndPointAnchor.RIGHT, 7, 7, true);
 				element.addEndPoint(endPoint);
 
-				endPoint = createDotEndPoint(EndPointAnchor.BOTTOM, 6, true);
+				endPoint = createDotEndPoint(EndPointAnchor.BOTTOM, 4, true);
 				element.addEndPoint(endPoint);
 
-				endPoint = createDotEndPoint(EndPointAnchor.LEFT, 6, true);
+				endPoint = createDotEndPoint(EndPointAnchor.LEFT, 4, true);
 				element.addEndPoint(endPoint);
 
 				model.addElement(element);
@@ -159,6 +168,8 @@ public class AutomataView implements Serializable {
 		DiagramConnection<Estado, Long> conn = new DiagramConnection<>(from, to);
 		conn.setSourceEntity(source);
 		conn.setTargetEntity(target);
+		
+		conn.getOverlays().add(new LabelOverlay("test", "test 2", 0.5));
 		return conn;
 	}
 
@@ -229,15 +240,8 @@ public class AutomataView implements Serializable {
 	public void createDynamicElements() {
 		estado.getDibuja().setX("1em");
 		estado.getDibuja().setY("3em");
-
-		if (estado.getTipoEtapa().equals(TipoEtapa.INICIAL)) {
-			estado.getDibuja().setCssClass("border-radius normal inicial");
-		} else if (estado.getTipoEtapa().equals(TipoEtapa.ACEPTACION)) {
-			estado.getDibuja().setCssClass("border-radius normal final");
-		} else {
-			estado.getDibuja().setCssClass("border-radius normal intermedio");
-		}
-
+		estado.getDibuja().setCssClass("border-radius normal inicial");
+		
 		estadoService.save(estado);
 		saveDiagram();
 		cargarEstados();
