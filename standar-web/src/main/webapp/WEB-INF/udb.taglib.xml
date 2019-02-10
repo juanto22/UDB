@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
+	version="2.0">
+	<namespace>http://udb.gov/ui</namespace>
+	<tag>
+		<tag-name>diagram</tag-name>
+		<description><![CDATA[]]></description>
+		<component>
+			<component-type>com.udb.diagram.config.component.Diagram</component-type>
+			<renderer-type>com.udb.diagram.renderer.component.DiagramRenderer</renderer-type>
+		</component>
+		<attribute>
+			<description><![CDATA[Unique identifier of the component in a namingContainer.]]></description>
+			<name>id</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Boolean value to specify the rendering of the component, when set to false component will not be rendered.]]></description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[An el expression referring to a server side UIComponent instance in a backing bean.]]></description>
+			<name>binding</name>
+			<required>false</required>
+			<type>javax.faces.component.UIComponent</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Unique identifier of the component in a namingContainer.]]></description>
+			<name>id</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Boolean value to specify the rendering of the component, when set to false component will not be rendered.]]></description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[An el expression referring to a server side UIComponent instance in a backing bean.]]></description>
+			<name>binding</name>
+			<required>false</required>
+			<type>javax.faces.component.UIComponent</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Value of the component.]]></description>
+			<name>value</name>
+			<required>false</required>
+			<type>java.lang.Object</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[An el expression or a literal text that defines a converter for the component. When it's an EL expression, it's resolved to a converter instance.
+    In case it's a static text, it must refer to a converter id.]]></description>
+			<name>converter</name>
+			<required>false</required>
+			<type>java.faces.convert.Converter</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name of the client side widget.]]></description>
+			<name>widgetVar</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name of the iterator variable used to refer each data.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Inline style of the component.]]></description>
+			<name>style</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Style class of the component.]]></description>
+			<name>styleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Style class of the component.]]></description>
+			<name>ondblclickNameFunction</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+	</tag>
+	<tag>
+		<tag-name>menuitem</tag-name>
+		<description><![CDATA[Menuitem is used by various menu components of PrimeFaces.]]></description>
+		<component>
+			<component-type>com.udb.diagram.config.component.UIMenuItem</component-type>
+		</component>
+		<attribute>
+			<description><![CDATA[Unique identifier of the component in a namingContainer.]]></description>
+			<name>id</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Boolean value to specify the rendering of the component, when set to false component will not be rendered.]]></description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[An el expression referring to a server side UIComponent instance in a backing bean.]]></description>
+			<name>binding</name>
+			<required>false</required>
+			<type>javax.faces.component.UIComponent</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Label of the component.]]></description>
+			<name>value</name>
+			<required>false</required>
+			<type>java.lang.Object</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[An actionlistener to process when command is executed.]]></description>
+			<name>actionListener</name>
+			<required>false</required>
+			<type>javax.faces.event.ActionListener</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A method expression or a string outcome to process when command is executed.]]></description>
+			<name>action</name>
+			<required>false</required>
+			<type>javax.el.MethodExpression</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Boolean value that determines the phaseId of the action event, 
+    when true actions are processed at "Apply Request Values", when false at "Invoke Application" phase.]]></description>
+			<name>immediate</name>
+			<required>false</required>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Url to be navigated when menuitem is clicked.]]></description>
+			<name>url</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Target type of url navigation.]]></description>
+			<name>target</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Style of the menuitem label.]]></description>
+			<name>style</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[StyleClass of the menuitem label.]]></description>
+			<name>styleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Javascript event handler for click event.]]></description>
+			<name>onclick</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Client side id of the component(s) to be updated after async partial submit request.]]></description>
+			<name>update</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Component id(s) to process partially instead of whole view.]]></description>
+			<name>process</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Javascript handler to execute before ajax request is begins.]]></description>
+			<name>onstart</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Disables or enables the menu item.]]></description>
+			<name>disabled</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Javascript handler to execute when ajax request is completed.]]></description>
+			<name>oncomplete</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Javascript handler to execute when ajax request fails.]]></description>
+			<name>onerror</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Javascript handler to execute when ajax request succeeds.]]></description>
+			<name>onsuccess</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Global ajax requests are listened by ajaxStatus component, setting global to false will not trigger ajaxStatus.]]></description>
+			<name>global</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[If less than delay milliseconds elapses between calls to request() only the most recent one is sent and all other requests are discarded. The default value of this option is null. If the value of delay is the literal string 'none' without the quotes or the default, no delay is used.]]></description>
+			<name>delay</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Defines the timeout for the ajax request.]]></description>
+			<name>timeout</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[When set to true, ajax requests are not queued.]]></description>
+			<name>async</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Specifies submit mode.]]></description>
+			<name>ajax</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Path of the menuitem image.]]></description>
+			<name>icon</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Position of the icon, default value is right.]]></description>
+			<name>iconPos</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[When enabled, only values related to partially processed components would be serialized for ajax 
+            instead of whole form.]]></description>
+			<name>partialSubmit</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[If true, indicate that this particular Ajax transaction is a value reset transaction. This will cause resetValue() to be called on any EditableValueHolder instances encountered as a result of this ajax transaction. If not specified, or the value is false, no such indication is made.]]></description>
+			<name>resetValues</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[If true, components which autoUpdate="true" will not be updated for this request. If not specified, or the value is false, no such indication is made.]]></description>
+			<name>ignoreAutoUpdate</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Title text of the menuitem.]]></description>
+			<name>title</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Used to resolve a navigation case.]]></description>
+			<name>outcome</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to include page parameters in target URI. Default is false.]]></description>
+			<name>includeViewParams</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Identifier of the target page which should be scrolled to.]]></description>
+			<name>fragment</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Disable appending the 
+             on the rendering of this element.]]></description>
+			<name>disableClientWindow</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Style of the menuitem container.]]></description>
+			<name>containerStyle</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[StyleClass of the menuitem container.]]></description>
+			<name>containerStyleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Selector to use when partial submit is on, default is ":input" to select all descendant inputs of a partially processed components.]]></description>
+			<name>partialSubmitFilter</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[tipoClasificador of the component.]]></description>
+			<name>tipoClasificador</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[tipoClasificador of the component.]]></description>
+			<name>jerarquia</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+	</tag>
+</facelet-taglib>

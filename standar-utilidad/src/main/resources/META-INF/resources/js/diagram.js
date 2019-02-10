@@ -5887,8 +5887,9 @@
                     n = "lineWidth",
                     o = {svg: "http://www.w3.org/2000/svg", xhtml: "http://www.w3.org/1999/xhtml"},
             p = function (a, b) {
-                for (var c in b)
-                    a.setAttribute(c, "" + b[c])
+                for (var c in b) {
+                	a.setAttribute(c, "" + b[c])
+                }
             },
                     q = function (a, b) {
                         var c = document.createElementNS(o.svg, a);
@@ -6753,7 +6754,8 @@
             };
             c(jsPlumb.init)
         }.call(this);
-/**  * PrimeFaces Diagram Widget
+/**
+ * * PrimeFaces Diagram Widget
  */ PrimeFaces.widget.Diagram = PrimeFaces.widget.DeferredWidget.extend({init: function (cfg) {
         this._super(cfg);
         this.renderDeferred();

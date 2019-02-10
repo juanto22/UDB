@@ -1,98 +1,126 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:p="http://primefaces.org/ui"
-                template="/template/layout.xhtml">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:udb="http://udb.gov/ui">
 
-    <ui:define name="head">
+	<ui:define name="master">
+	</ui:define>
+	<ui:define name="detail">
+		<script type="text/javascript">
+			function loadDialogEdit(id) {
+				$("#idetapa").val(id);
+				sendPreparar();
+				PF('dlgUpdate').show();
+			}
 
-    </ui:define>
+			function loadDialogDelete(id) {
+				$("#idetapa").val(id);
+				PF('dlgDelete').show();
+			}
 
-    <ui:define name="subheader">
+			function sendForm() {
+				var idval = $("#idetapa").val();
+				var nomVal = $("#nom").val();
+				nameFunction([ {
+					name : "id",
+					value : idval
+				}, {
+					name : "nom",
+					value : nomVal
+				} ]);
+				//para enviar mas de uno es la forma siguiente: [{name: "id", value: idval}, {name: 'variable name', value: 'variable value'}]
+			}
 
-    </ui:define>
+			function sendFormDelete() {
+				var idval = $("#idetapa").val();
+				deleteFunction([ {
+					name : "id",
+					value : idval
+				} ]);
+			}
 
-    <ui:define name="content">
-	
-		<h:form id="registerUserForm">
-		
-			 <p:contextMenu id="ctxUser" for="registerUserForm:userTable">
-				<p:menuitem value="Editar" icon="fa fa-pencil"
-							process="@this userTable"
-							actionListener="#{userView.preparedUpdateUser}"
-							update="createUpdateUserForm" 
-							oncomplete="PF('userDialog').show()"/>
-				
-				<p:menuitem value="Eliminar" icon="fa fa-trash"
-					process="@this userTable" update="userTable" 
-					actionListener="#{userView.deleteUser}">
-						<p:confirm header="Eliminacion"
-							message="Desea eliminar este registro?" />
-				</p:menuitem>
-			</p:contextMenu>
-		
-		
-	        <h2>Listado de usuarios</h2>
-	        <p:separator />
-	        
-	       <p:dataTable id="userTable" value="#{userView.users}"
-                        var="user" rowIndexVar="indice" 
-                        rowKey="#{user}"
-                        selection="#{userView.userSelected}" selectionMode="single"
-                        emptyMessage="#{safiCommonBundle.ListEmpty}" 
-                        paginator="true" rows="10" paginatorPosition="bottom"
-                      	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                        currentPageReportTemplate="| #{safiCommonBundle.page} {currentPage} #{safiCommonBundle.of} {totalPages} |" 
-                        rowsPerPageTemplate="10,20,30,40"> 
-	        		
-	        		<p:column headerText="Nombre de usuario" filterBy="#{user.userName}">
-			        	#{user.userName}
-			        </p:column>
+			function sendFor() {
+				sendPreparar();
+			}
 
-					<p:column headerText="Primer Nombre"  >
-			        	#{user.firstName}
-			        </p:column>
-			        
-			        <p:column headerText="Segundo Nombre"  >
-			        	#{user.middleName}
-			        </p:column>
-			        
-			        <p:column headerText="Apellidos"  >
-			        	#{user.lastName}
-			        </p:column>
-			        
-			        <p:column headerText="Correo electrónico" >
-			        	#{user.email}
-			        </p:column>
-			        
-			        <p:column headerText="Dirección" >
-			        	#{user.address}
-			        </p:column>
-			        
-			        <p:column headerText="Teléfono" >
-			        	#{user.telephone}
-			        </p:column>
-	        </p:dataTable>
-	        
-	        <p:commandButton
-				value="#{safiCommonBundle.addLabel}"
-				actionListener="#{userView.preparedCreatedUser}"
-				icon="fa fa-plus-circle" update="createUpdateUserForm"
-				oncomplete="PF('userDialog').show()" />
-				
-			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-				<p:commandButton value="Si" type="button"
-					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-				<p:commandButton value="No" type="button"
-					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-			</p:confirmDialog>
+			function sendPreparar() {
+				var idval = $("#idetapa").val();
+				prepararFunction([ {
+					name : "id",
+					value : idval
+				} ]);
+				//para enviar mas de uno es la forma siguiente: [{name: "id", value: idval}, {name: 'variable name', value: 'variable value'}]
+			}
+		</script>
+		<h:form id="diagramForm" prependId="false">
+			<h:inputHidden id="inputhidden" />
+
+			<udb:diagram id="diagramV" rendered="true" widgetVar="diagram"
+				value="#{automataView.model}" style="height:600px"
+				styleClass="ui-widget-content">
+
+				<udb:menuitem value="Editar" icon="ui-icon-pencil" />
+				<udb:menuitem value="Eliminar" icon="ui-icon-close" />
+				<udb:menuitem value="Ver Transiciones" icon="ui-icon-bookmark" />
+
+				<p:ajax event="connect" listener="#{automataView.onConnect}" />
+				<p:ajax event="disconnect" listener="#{automataView.onDisconnect}" />
+				<p:ajax event="connectionChange"
+					listener="#{automataView.onConnectionChange}" />
+				<p:ajax event="elementDrop" listener="#{automataView.elementDrop}" />
+
+<!-- 				<p:ajax event="elementClick" listener="#{automataView.elementClick}" /> -->
+
+			</udb:diagram>
+
+			<p:commandButton value="Nuevo" id="btnCreateElement"
+				actionListener="${automataView.prepareCreate}"
+				oncomplete="PF('dlgAdd').show();" process="@this" update="dlgAddID" />
+
+			<p:commandButton value="Guardar" id="guardar"
+				actionListener="#{automataView.saveDiagram}" process="@this" />
+
+			<h:inputHidden id="idetapa" />
 		</h:form>
-		
-		<ui:include
-			src="./dialogs/created_edit_dialog_user.xhtml" />
-    </ui:define>
 
+		<p:dialog header="Nueva Etapa" id="dlgAddID" widgetVar="dlgAdd" resizable="false"
+			modal="true">
+			<h:form>
+				<h:panelGrid columns="2" cellpadding="5" id="dgEnvia">
+					<h:outputLabel for="nom" value="Nombre:" />
+					<p:inputText id="nom" value="#{automataView.estado.nombre}"
+						label="nombre" />
+
+					<p:outputLabel for="comboTipoEtapa" value="Tipo Etapa:" />
+					<p:selectOneMenu id="comboTipoEtapa" required="true"
+						value="#{automataView.estado.tipoEtapa}" style="width:125px">
+						<f:selectItems value="#{automataView.tiposEtapaList}" var="tipoE"
+							itemLabel="#{tipoE.description}" itemValue="#{tipoE}" />
+						<f:converter converterId="jsfUniversalConverter" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<p:commandButton value="Guardar"
+					actionListener="#{automataView.createDynamicElements}"
+					update="diagramV"
+					oncomplete="handleSumitRequest(xhr, status, args)" />
+				<p:commandButton value="Cancelar" onclick="PF('dlgAdd').hide()"></p:commandButton>
+			</h:form>
+		</p:dialog>
+
+
+		<script type="text/javascript">
+			function handleSumitRequest(xhr, status, args) {
+				if (args.validationFailed) {
+					PF('dlgAdd').jq.effect("shake", {
+						times : 5
+					}, 100);
+				} else {
+					PF('dlgAdd').hide();
+				}
+			}
+		</script>
+	</ui:define>
 </ui:composition>
