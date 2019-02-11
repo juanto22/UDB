@@ -38,9 +38,13 @@
 			<p:commandButton value="Nuevo" id="btnCreateElement"
 				actionListener="${automataView.prepareCreate}"
 				oncomplete="PF('dlgAdd').show();" process="@this" update="dlgAddID" />
-
+				
 			<p:commandButton value="Guardar" id="guardar"
 				actionListener="#{automataView.saveDiagram}" process="@this" />
+				
+			<p:commandButton value="probar automata" id="btnTestAutomata"
+				actionListener="${automataView.prepareTestAutomata}"
+				oncomplete="PF('dlgCadenaPrueba').show();" process="@this" update="dlgCadenaPrueba" />
 
 		</h:form>
 
@@ -99,6 +103,25 @@
 					onclick="PF('dlgTransicion').hide();"></p:commandButton>
 			</h:form>
 		</p:dialog>
+		
+		
+		<p:dialog header="Cadena de prueba" id="dlgCadenaPrueba"
+			widgetVar="dlgCadenaPrueba" resizable="false" modal="true">
+			<h:form id="testAutomataForm" prependId="false">
+				<h:panelGrid columns="2" cellpadding="5" id="dgEnvia">
+					<h:outputLabel for="txtCadena" value="Cadena:" />
+					<p:inputText id="txtCadena" value="#{automataView.cadenaDePrueba}"
+						label="Cadena" />
+				</h:panelGrid>
+				<p:commandButton id="btnRunTestAutomata" value="Simular"
+					actionListener="#{automataView.runTestAutomata}" update="diagramV"
+					oncomplete="PF('dlgCadenaPrueba').hide();" />
+				<p:commandButton value="Cancelar"
+					onclick="PF('dlgCadenaPrueba').hide();">
+					<p:resetInput target="testAutomataForm" />
+				</p:commandButton>
+			</h:form>
+		</p:dialog>
 
 
 		<script type="text/javascript">
@@ -112,5 +135,6 @@
 				}
 			}
 		</script>
+		
 	</ui:define>
 </ui:composition>

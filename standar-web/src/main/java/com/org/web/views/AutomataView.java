@@ -1,23 +1,17 @@
 package com.org.web.views;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.hibernate.exception.GenericJDBCException;
 import org.omnifaces.cdi.ViewScoped;
 import org.omnifaces.util.Messages;
 import org.picketlink.Identity;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.diagram.ConnectEvent;
 import org.primefaces.event.diagram.ConnectionChangeEvent;
 import org.primefaces.event.diagram.DisconnectEvent;
@@ -31,22 +25,15 @@ import org.primefaces.model.diagram.endpoint.EndPointAnchor;
 import org.primefaces.model.diagram.endpoint.RectangleEndPoint;
 import org.primefaces.model.diagram.overlay.ArrowOverlay;
 import org.primefaces.model.diagram.overlay.LabelOverlay;
-import org.primefaces.model.diagram.overlay.Overlay;
 
 import com.org.security.enums.TipoConectorEnum;
 import com.org.security.enums.TipoEtapa;
-import com.org.security.identity.model.UserTypeEntity;
-import com.org.security.identity.stereotype.User;
 import com.org.security.utils.DiagramConnection;
 import com.org.security.utils.DiagramElement;
 import com.org.security.utils.DibujaNodo;
-import com.org.util.enumeration.ViewStatus;
-import com.org.util.web.BaseLazyModel;
 import com.udb.diagram.config.event.ElementDropEvent;
-import com.udb.model.Empleado;
 import com.udb.model.Estado;
 import com.udb.model.Transicion;
-import com.udb.service.EmpleadoService;
 import com.udb.service.EstadoService;
 import com.udb.service.TransicionService;
 
@@ -78,6 +65,8 @@ public class AutomataView implements Serializable {
 	private List<TipoEtapa> tiposEtapaList;
 	private String transicionName;
 	private Long idEstado;
+	
+	private String cadenaDePrueba;
 
 	@PostConstruct
 	public void init() {
@@ -100,6 +89,15 @@ public class AutomataView implements Serializable {
 		estado = new Estado();
 		estado.setDibuja(new DibujaNodo());
 		tiposEtapaList = Arrays.asList(TipoEtapa.values());
+	}
+	
+	public void prepareTestAutomata() {
+		cadenaDePrueba = "";
+	}
+	
+	public void runTestAutomata() {
+		Messages.create("Test").detail("Empieza prueba").add();
+		Messages.create("Test value").detail(cadenaDePrueba).add();
 	}
 
 	public void checkInitialStage() {

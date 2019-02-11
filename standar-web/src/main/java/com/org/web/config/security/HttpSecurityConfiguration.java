@@ -29,22 +29,12 @@ public class HttpSecurityConfiguration {
              .forPath("/logout", "Authentication")
              	.logout()
              	.redirectTo("/login.xhtml")
-             .forPath("/tec/*","Authentication") //estudent
-             	.authorizeWith()
-             		.group(GroupsSecurityRolesNames.TEC.getCode())
-             			.redirectTo("/errors/access-denied.xhtml")
-             				.whenForbidden()
-              .forPath("/guest/*","Authentication") //teacher
-              	.authorizeWith()
-              		.group(GroupsSecurityRolesNames.GUEST.getCode())
-              			.redirectTo("/errors/access-denied.xhtml")
-              				.whenForbidden()
               .forPath("/security/*","Authentication") //Admins
               	.authorizeWith()
               		.group(GroupsSecurityRolesNames.ADMINS.getCode())
               			.redirectTo("/errors/access-denied.xhtml")
               				.whenForbidden()
-              .forPath("/administration/*","Authentication") //Manager
+              .forPath("/automata/*","Authentication") //Admins
               	.authorizeWith()
               		.group(GroupsSecurityRolesNames.ADMINS.getCode())
               			.redirectTo("/errors/access-denied.xhtml")

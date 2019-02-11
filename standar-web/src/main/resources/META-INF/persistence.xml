@@ -6,7 +6,7 @@
 
 	<persistence-unit name="dbPU">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jta-data-source>java:jboss/datasources/SIG_LOCAL</jta-data-source>
+		<jta-data-source>java:jboss/datasources/SAFICORE_LOCAL</jta-data-source>
 		<jar-file>lib/standar-utilidad-1.0-SNAPSHOT.jar</jar-file>
 		<jar-file>lib/standar-comun-1.0-SNAPSHOT.jar</jar-file>
 		<properties>

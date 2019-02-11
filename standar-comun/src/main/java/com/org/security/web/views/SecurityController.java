@@ -55,108 +55,23 @@ public class SecurityController implements Serializable {
 		model = new DefaultMenuModel();
 
 		boolean isAdminUser = authorizationChecker.hasGroup(GroupsSecurityRolesNames.ADMINS.getCode());
-		boolean isTecnicoUser = authorizationChecker.hasGroup(GroupsSecurityRolesNames.TEC.getCode());
-		boolean isInvitadoUser = authorizationChecker.hasGroup(GroupsSecurityRolesNames.GUEST.getCode());
 		
 		if (isAdminUser) {
 			adminMenu();
 		}
-
-		if (isTecnicoUser) {
-			tecnicoMenu();
-		}
-
-		if (isInvitadoUser) {
-			guestMenu();
-		}
-
 	}
 
 	private void adminMenu() {
-		DefaultSubMenu firstSubmenu = new DefaultSubMenu("Administración de seguridad");
+		DefaultSubMenu firstSubmenu = new DefaultSubMenu("Teoria de la computacion");
 		firstSubmenu.setIcon("icon-menu");
 
 		DefaultMenuItem item = new DefaultMenuItem();
-		item.setValue("Lista de Usuarios");
-		item.setTarget("/security/list.xhtml");
+		item.setValue("Automatas");
+		item.setTarget("/automata/automata.xhtml");
 		item.setIcon("icon-hyperlink");
 		item.setCommand("#{securityController.onMenuSelect}");
-		firstSubmenu.addElement(item);
-
-		item = new DefaultMenuItem();
-		item.setValue("Lista de grupos");
-		item.setTarget("/security/group/list.xhtml");
-		item.setIcon("icon-hyperlink");
-		item.setCommand("#{securityController.onMenuSelect}");
-		firstSubmenu.addElement(item);
-
-		item = new DefaultMenuItem();
-		item.setValue("Lista de roles");
-		item.setTarget("/security/role/list.xhtml");
-		item.setIcon("icon-hyperlink");
-		item.setCommand("#{securityController.onMenuSelect}");
-		firstSubmenu.addElement(item);
-	
-		DefaultSubMenu crudMenu = new DefaultSubMenu("Mantenimiento");
-		item = new DefaultMenuItem();
-		item.setValue("Empleados");
-		item.setTarget("/administration/crud/index.xhtml");
-		item.setIcon("icon-hyperlink");
-		item.setCommand("#{securityController.onMenuSelect}");
-		crudMenu.addElement(item);
+		firstSubmenu.addElement(item);	
 		
-		firstSubmenu.addElement(crudMenu);
-		
-		DefaultSubMenu advanceOptionsMenu = new DefaultSubMenu("Opciones Avanzadas");
-		
-		item = new DefaultMenuItem();
-		item.setValue("Exportar/Importar Informacion");
-		item.setTarget("/administration/advancedOptions/expimpInformacion.xhtml");
-		item.setIcon("icon-hyperlink");
-		item.setCommand("#{securityController.onMenuSelect}");
-		advanceOptionsMenu.addElement(item);
-		
-		item = new DefaultMenuItem();
-		item.setValue("Respaldo Automatico");
-		item.setTarget("/administration/advancedOptions/respaldo.xhtml");
-		item.setIcon("icon-hyperlink");
-		item.setCommand("#{securityController.onMenuSelect}");
-		advanceOptionsMenu.addElement(item);
-		
-		firstSubmenu.addElement(advanceOptionsMenu);
-
-		model.addElement(firstSubmenu);
-
-	}
-
-	private void tecnicoMenu() {
-		DefaultSubMenu firstSubmenu = new DefaultSubMenu("Menú");
-		firstSubmenu.setIcon("icon-menu");
-
-		DefaultMenuItem item = new DefaultMenuItem();
-
-		item.setValue("Empleados");
-		item.setTarget("/tec/crud/index.xhtml");
-		item.setIcon("icon-hyperlink");
-		item.setCommand("#{securityController.onMenuSelect}");
-		firstSubmenu.addElement(item);
-
-		model.addElement(firstSubmenu);
-	}
-
-	private void guestMenu() {
-		
-		DefaultSubMenu firstSubmenu = new DefaultSubMenu("Menú");
-		firstSubmenu.setIcon("icon-menu");
-
-		DefaultMenuItem item = new DefaultMenuItem();
-		
-		item.setValue("Empleados");
-		item.setTarget("/guest/crud/index.xhtml");
-		item.setIcon("icon-hyperlink");
-		item.setCommand("#{securityController.onMenuSelect}");
-		firstSubmenu.addElement(item);
-
 		model.addElement(firstSubmenu);
 	}
 
