@@ -65,8 +65,10 @@ public class AutomataView implements Serializable {
 	private List<TipoEtapa> tiposEtapaList;
 	private String transicionName;
 	private Long idEstado;
-	
+
 	private String cadenaDePrueba;
+	private Estado initialStage;
+	private List<Transicion> initialTransition;
 
 	@PostConstruct
 	public void init() {
@@ -90,14 +92,109 @@ public class AutomataView implements Serializable {
 		estado.setDibuja(new DibujaNodo());
 		tiposEtapaList = Arrays.asList(TipoEtapa.values());
 	}
-	
+
 	public void prepareTestAutomata() {
 		cadenaDePrueba = "";
+		initialStage = estadoService.findEstadoByInitialStage();
+		initialTransition = transicionService.findbyEtapaInicial(initialStage);
+	}
+
+	public void runTestAutomata() {
+		char[] stringArray = readStringCharByChar(cadenaDePrueba);
+		int lenght  = stringArray.length;
+		boolean isAceptaStage = findRoadTransition(stringArray, initialTransition, 0, lenght);
+		if (isAceptaStage) {
+			Messages.create("Cadena").detail(cadenaDePrueba + " Valida").add();
+		} else {
+			Messages.create("Cadena").detail(cadenaDePrueba + " No valida").add();
+		}
+	}
+
+	private boolean findRoadTransition(char[] cadenaValores, List<Transicion> transiciones, int index, int lenght) {
+		if (isLessThan(index, lenght)) {
+			Transicion nowTransicion = readsTransitions(cadenaValores[index], transiciones);
+			boolean isAceptaStage = TipoEtapa.ACEPTACION.equals(nowTransicion.getEtapaFinal().getTipoEtapa());
+			boolean isTheLastCharacter = ((lenght - 1) == index);
+			if (isAceptaStage && isTheLastCharacter) {
+				return true;
+			} else {
+				List<Transicion> nextTransiciones = transicionService.findbyEtapaInicial(nowTransicion.getEtapaFinal());
+				return findRoadTransition(cadenaValores, nextTransiciones, index + 1, lenght);
+			}
+		} else {
+			return false;
+		}
 	}
 	
-	public void runTestAutomata() {
-		Messages.create("Test").detail("Empieza prueba").add();
-		Messages.create("Test value").detail(cadenaDePrueba).add();
+	private boolean isLessThan(int index, int lenght){
+		return index < lenght;
+	}
+
+	private Transicion readsTransitions(char value, List<Transicion> transiciones) {
+		Transicion nextTransicion = null;
+		for (Transicion transicion : transiciones) {
+			if (isExistRoad(value, transicion)) {
+				nextTransicion = transicion;
+				break;
+			}
+		}
+		return nextTransicion;
+	}
+
+	private boolean isExistRoad(char stringValue, Transicion transicion) {
+		boolean isContainMulValues = isContainMultipleValue(transicion.getNombre());
+		boolean isExistTransitionRoad;
+		if (isContainMulValues) {
+			char[] transicionesValue = splitTransitionValue(transicion.getNombre());
+			isExistTransitionRoad = equalsMultipleRoads(stringValue, transicionesValue);
+		} else {
+			char transicionValue = getCharValue(transicion.getNombre());
+			isExistTransitionRoad = equalsRoad(stringValue, transicionValue);
+		}
+		return isExistTransitionRoad;
+	}
+
+	private boolean equalsMultipleRoads(char stringValue, char[] transicionesValues) {
+		int lenght = transicionesValues.length;
+		boolean areEquals = false;
+		for (int i = 0; i < lenght; i++) {
+			if (stringValue == transicionesValues[i]) {
+				areEquals = true;
+				break;
+			}
+		}
+		return areEquals;
+	}
+
+	private boolean equalsRoad(char stringValue, char transicionValue) {
+		return stringValue == transicionValue;
+	}
+
+	private char[] splitTransitionValue(String transitionValue) {
+		String[] splitArray = transitionValue.split(",");
+		int lenght = splitArray.length;
+		char[] transitionValues = new char[lenght];
+		for (int i = 0; i < lenght; i++) {
+			transitionValues[i] = splitArray[i].charAt(0);
+		}
+		return transitionValues;
+	}
+
+	private char getCharValue(String transitionValue) {
+		return transitionValue.charAt(0);
+	}
+
+	private boolean isContainMultipleValue(String transitionValue) {
+		return transitionValue.contains(",");
+	}
+
+	private char[] readStringCharByChar(String cadena) {
+		int length = cadena.length();
+		char[] charArray = new char[length];
+		for (int i = 0; i < length; i++) {
+			charArray[i] = cadena.charAt(i);
+		}
+		return charArray;
 	}
 
 	public void checkInitialStage() {
