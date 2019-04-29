@@ -41,6 +41,7 @@ public class RSA {
 		traslateMap.put("X", 23);
 		traslateMap.put("Y", 24);
 		traslateMap.put("Z", 25);
+		traslateMap.put(" ", 26);
 		correlationMap = Collections.unmodifiableMap(traslateMap);
 	}
 
