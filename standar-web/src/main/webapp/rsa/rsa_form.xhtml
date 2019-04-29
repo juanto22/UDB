@@ -52,13 +52,14 @@
 
 			<br />
 			
-			<p:commandButton value="Encriptar" update="rsaForm:outPutMessagePanel"
+			<p:commandButton value="Encriptar" update="rsaForm"
 				actionListener="#{rsaView.encryptMessage}" />
 				
-			<p:commandButton value="Desencriptar" update="rsaForm:outPutMessagePanel"
+			<p:commandButton value="Desencriptar" update="rsaForm"
+				disabled="#{rsaView.disabledDecryptButton}"
 				actionListener="#{rsaView.decryptMessage}" />
 			
-			<p:commandButton value="Limpiar" update="rsaForm:outPutMessagePanel"
+			<p:commandButton value="Limpiar" update="rsaForm"
 				actionListener="#{rsaView.clearAll}" />
 							
 		</h:form>

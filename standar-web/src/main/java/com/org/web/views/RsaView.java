@@ -41,6 +41,7 @@ public class RsaView implements Serializable {
 	private BigInteger e;
 	private BigInteger phi;
 	private BigInteger[] encrypted;
+	private boolean disabledDecryptButton;
 
 	@PostConstruct
 	public void init() {
@@ -48,6 +49,7 @@ public class RsaView implements Serializable {
 		this.encryptedMessage = StringUtils.EMPTY;
 		this.descryptedMessage = StringUtils.EMPTY;
 		this.originalMessage = StringUtils.EMPTY;
+		disabledDecryptButton = true;
 	}
 
 	public void encryptMessage() {
@@ -66,6 +68,7 @@ public class RsaView implements Serializable {
 			this.encrypted = RSA.encrypt(cipherMessage, e, n);
 			String outputEncrypt = RSA.toStringMessage(this.encrypted);
 			this.encryptedMessage = outputEncrypt;
+			this.disabledDecryptButton = false;
 		}
 		
 	}
@@ -86,7 +89,8 @@ public class RsaView implements Serializable {
 		
 		Strings.nullToEmpty(message);
 		
-		if(message == null || message.codePoints().allMatch(c -> Character.isWhitespace(c))) {
+		if(Strings.isNullOrEmpty(message) || message.codePoints().allMatch(c -> Character.isWhitespace(c))) {
+			doEncrypt = false;
 			Messages.create("Palabra a encriptar").detail("No puede ser nula o vacia").error().add();			
 		}
 				
@@ -126,7 +130,8 @@ public class RsaView implements Serializable {
 		this.encryptedMessage = StringUtils.EMPTY;
 		this.descryptedMessage = StringUtils.EMPTY;
 		this.originalMessage = StringUtils.EMPTY;
-
+		this.disabledDecryptButton = true;
+		
 		this.n = new BigInteger("0");
 		this.e = new BigInteger("0");
 		this.phi = new BigInteger("0");
