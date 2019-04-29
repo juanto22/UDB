@@ -25,13 +25,19 @@
 			<p:outputPanel id="outPutMessagePanel">
 				<p:panelGrid columns="2" id="pgDatosPerfil">
 					<p:outputLabel value="Primer numero primo (p):" />
-					<p:inputText id="txtP"
-						value="#{rsaView.p}" />
-	
+					<h:panelGroup>
+						<p:inputText id="txtP" required="true" requiredMessage="Ingrese el numero primo (p)"
+							value="#{rsaView.p}" />
+						<p:message for="txtP" />
+					</h:panelGroup>
+					
 					<p:outputLabel value="Segundo numero primo (q):" />
-					<p:inputText id="txtQ"
-						value="#{rsaView.q}" />
-	
+					<h:panelGroup>
+						<p:inputText id="txtQ" required="true" requiredMessage="Ingrese el numero primo (q)"
+							value="#{rsaView.q}" />
+						<p:message for="txtQ" />
+					</h:panelGroup>
+					
 					<p:outputLabel value="Palabra a encriptar:" />
 					<p:inputText id="txtMessage"
 						value="#{rsaView.message}" />
