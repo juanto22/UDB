@@ -39,6 +39,12 @@ public class HttpSecurityConfiguration {
               		.group(GroupsSecurityRolesNames.ADMINS.getCode())
               			.redirectTo("/errors/access-denied.xhtml")
               				.whenForbidden()
+              				
+              .forPath("/rsa/*","Authentication") //Admins
+              	.authorizeWith()
+              		.group(GroupsSecurityRolesNames.ADMINS.getCode())
+              			.redirectTo("/errors/access-denied.xhtml")
+                           	.whenForbidden()
              .forPath("/javax.faces.resource/*")
                  .unprotected();	 
 	}	

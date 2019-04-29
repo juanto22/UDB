@@ -73,6 +73,13 @@ public class SecurityController implements Serializable {
 		firstSubmenu.addElement(item);	
 		
 		model.addElement(firstSubmenu);
+		
+		item = new DefaultMenuItem();
+		item.setValue("RSA");
+		item.setTarget("/rsa/rsa_form.xhtml");
+		item.setIcon("icon-hyperlink");
+		item.setCommand("#{securityController.onMenuSelect}");
+		firstSubmenu.addElement(item);
 	}
 
 	public MenuModel getMenuModel() {

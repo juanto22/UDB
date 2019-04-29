@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml">
+
+	<ui:define name="head">
+
+	</ui:define>
+
+	<ui:define name="subheader">
+		<h:outputText value="Algoritmo RSA"></h:outputText>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="rsaForm">
+
+			<h2>RSA Algoritmo</h2>
+			<p:separator />
+
+			<h3>Datos de entrada</h3>
+			<p:separator />
+			<p:outputPanel id="outPutMessagePanel">
+				<p:panelGrid columns="2" id="pgDatosPerfil">
+					<p:outputLabel value="Primer numero primo (p):" />
+					<p:inputText id="txtP"
+						value="#{rsaView.p}" />
+	
+					<p:outputLabel value="Segundo numero primo (q):" />
+					<p:inputText id="txtQ"
+						value="#{rsaView.q}" />
+	
+					<p:outputLabel value="Palabra a encriptar:" />
+					<p:inputText id="txtMessage"
+						value="#{rsaView.message}" />
+	
+					<p:outputLabel value="Palabra original:" />
+					<p:inputTextarea id="txtOriginalMsg" rows="6" cols="33" value="#{rsaView.message}"  readonly="true" />
+	
+					<p:outputLabel value="Palabra encriptada" />
+					<p:inputTextarea id="txtEncryptedMsg" rows="6" cols="33"  value="#{rsaView.encryptedMessage}" readonly="true" />
+	
+					<p:outputLabel value="Palabra desencriptada" />
+					<p:inputTextarea id="txtDescryptedMsg" rows="6" cols="33"  value="#{rsaView.descryptedMessage}" readonly="true" />
+	
+					<p:outputLabel value="Mensaje original" />
+					<p:inputTextarea id="txtRestoredMsg" rows="6" cols="33"  value="#{rsaView.originalMessage}" readonly="true"/>
+				</p:panelGrid>
+			</p:outputPanel>
+
+			<br />
+			
+			<p:commandButton value="Encriptar" update="rsaForm:outPutMessagePanel"
+				actionListener="#{rsaView.encryptMessage}" />
+				
+			<p:commandButton value="Desencriptar" update="rsaForm:outPutMessagePanel"
+				actionListener="#{rsaView.decryptMessage}" />
+			
+			<p:commandButton value="Limpiar" update="rsaForm:outPutMessagePanel"
+				actionListener="#{rsaView.clearAll}" />
+							
+		</h:form>
+	</ui:define>
+</ui:composition>
